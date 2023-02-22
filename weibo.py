@@ -22,10 +22,7 @@ csv_writer = csv.DictWriter(f, fieldnames=[
 csv_writer.writeheader()
 loop = True
 
-while loop:
-    now_time = int(time.time())
-    timeArray = time.localtime(now_time)
-    date = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+def get_content():
     url = 'https://s.weibo.com/top/summary?cate=realtimehot'
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
@@ -36,24 +33,38 @@ while loop:
     selector = parsel.Selector(response.text)
     #print(selector)
     trs = selector.css('#pl_top_realtimehot tbody tr')[:50]
-    print(len(trs))
-    for tr in trs:
-        num = tr.css('td.td-01.ranktop::text').get()
-        print(num)
-        if num:
-            if num.isdigit():
-                title = tr.css('.td-02 a::text').get()
-                hot2 = tr.css('.td-02 span::text').get()
-                hot = re.sub('([^\u0030-\u0039])', '', hot2)
-                dit = {
-                    '时间': date,
-                    '排名': num,
-                    '标题': title,
-                    '热度': hot,
-                }
-                print(dit)
-                csv_writer.writerow(dit)
-            else:
-                print("not digit num.")
-    #loop = False
-    time.sleep(120)
+
+    return trs
+
+while loop:
+    now_time = int(time.time())
+    timeArray = time.localtime(now_time)
+    date = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+
+    try:
+        trs = get_content()
+        print(len(trs))
+
+        for tr in trs:
+            num = tr.css('td.td-01.ranktop::text').get()
+            print(num)
+            if num:
+                if num.isdigit():
+                    title = tr.css('.td-02 a::text').get()
+                    hot2 = tr.css('.td-02 span::text').get()
+                    hot = re.sub('([^\u0030-\u0039])', '', hot2)
+                    dit = {
+                        '时间': date,
+                        '排名': num,
+                        '标题': title,
+                        '热度': hot,
+                    }
+                    print(dit)
+                    csv_writer.writerow(dit)
+                else:
+                    print("not digit num.")
+        #loop = False
+        time.sleep(120)
+
+    except:
+        print('get url failed.')
