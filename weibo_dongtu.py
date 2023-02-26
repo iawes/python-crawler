@@ -38,7 +38,7 @@ def new_charts(file_path):
             Bar()
             #.add_xaxis(list(df['标题'][i*10: i*10+10][::-1]))         # x轴数据
             .add_xaxis(list(df['标题'])[i*factor: i*factor+10][::-1])         # x轴数据
-            .add_yaxis('热度', list(df['热度'])[i*factor: i*factor+10][::-1])   # y轴数据
+            .add_yaxis('微博热搜榜', list(df['热度'])[i*factor: i*factor+10][::-1])   # y轴数据
             #.add_yaxis('热度', list(df['热度'][i*10: i*10+10][::-1]))   # y轴数据
             .reversal_axis()     # 翻转
             .set_global_opts(    # 全局配置项
@@ -46,6 +46,7 @@ def new_charts(file_path):
                     title=f"{list(df['时间'])[i*factor]}",
                     pos_right="5%", pos_bottom="15%",
                     title_textstyle_opts=opts.TextStyleOpts(
+                        #font_family='KaiTi', font_size=24, color='#FF1493'
                         font_family='KaiTi', font_size=24, color='#FF1493'
                     )
                 ),
@@ -54,22 +55,25 @@ def new_charts(file_path):
                 ),
                 yaxis_opts=opts.AxisOpts(   # y轴配置项
                     splitline_opts=opts.SplitLineOpts(is_show=True),
-                    axislabel_opts=opts.LabelOpts(color='#DC143C')
+                    #axislabel_opts=opts.LabelOpts(color='#DC143C')
+                    axislabel_opts=opts.LabelOpts(font_size=18, color='#DC143C')
                 )
             )
             .set_series_opts(    # 系列配置项
                 label_opts=opts.LabelOpts(  # 标签配置
-                    position="right", color='#9400D3')
+                    #position="right", color='#9400D3')
+                    position="right", font_size=18, color='#9400D3')
             )
         )
         grid = (
             Grid()
-                .add(bar, grid_opts=opts.GridOpts(pos_left="24%"))
+                #.add(bar, grid_opts=opts.GridOpts(pos_left="24%"))
+                .add(bar, grid_opts=opts.GridOpts(pos_left="36%"))
         )
         t.add(grid, "")
         t.add_schema(
             play_interval=200,          # 轮播速度
-            is_timeline_show=True,     # 是否显示 timeline 组件
+            is_timeline_show=False,     # 是否显示 timeline 组件
             is_auto_play=True,          # 是否自动播放
         )
 
