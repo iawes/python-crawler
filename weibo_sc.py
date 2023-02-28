@@ -11,6 +11,8 @@ import schedule
 import argparse
 
 from weibo_dongtu import new_charts
+from weibo_video import convert_video_js
+
 #def run():
 #    print("I'm doing something...")
 #
@@ -106,7 +108,7 @@ class WeiboHot(object):  # 创建Circle类
                             '标题': title,
                             '热度': hot,
                         }
-                        print(dit)
+                        #print(dit)
                         self.csv_writer.writerow(dit)
                     else:
                         print("not digit num.")
@@ -145,13 +147,19 @@ def process_day(interval):
     try:
         new_charts(yes_csv)
     except:
-        print('nwe charts failed.')
+        print('new_charts failed.')
+
+    try:
+        convert_video_js(yes_csv + '.html', r'C:\usr\code\pytdx\convert_video_template.html', 15, 4, 30, 31)
+    except:
+        print('convert_video_js failed.')
 
     print(hot.day)
     print(hot.csv_file)
     print(hot.csv_writer)
     print(hot.fd)
     print(hot.job)
+    print(yes_csv)
 
 if __name__ == "__main__":
 

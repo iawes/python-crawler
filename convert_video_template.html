@@ -26,12 +26,13 @@
         let $parent = document.getElementById('myCanvas')
         let myChart = echarts.init($parent);
         //这里的option就是echrts案例中的option，代码太多，就不贴了
-        //option_relaced
+
+        var option = {
 
         len = option.options.length;
-        play_interval = 200 + 35;
+        play_interval = 200;
         //alert(len);
-        video_time = option.options.length * play_interval
+        video_time = (option.options.length * play_interval)* 1.20
 
         myChart.setOption(option);
 
@@ -59,7 +60,7 @@
 
                     var recordedBlob = recordRTC.getBlob();
                     //recordRTC.getDataURL(function(dataURL) { });
-                    saveAs(recordedBlob, "test.mp4");
+                    saveAs(recordedBlob, "test_xxx.mp4");
                 });
             }, time)
         }
