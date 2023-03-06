@@ -12,6 +12,8 @@ import argparse
 
 from weibo_dongtu import new_charts
 from weibo_video import convert_video_js
+from html_to_video_2 import html_to_video
+from webm_to_mp4 import webm_to_mp4
 
 #def run():
 #    print("I'm doing something...")
@@ -72,7 +74,8 @@ class WeiboHot(object):  # 创建Circle类
         # 判断文件是否存在
         if (os.path.exists(self.csv_file)) :
             #存在，则删除文件
-            os.remove(self.csv_file)
+            #os.remove(self.csv_file)
+            print('%s exist.' %(self.csv_file))
 
         if self.fd != -1:
             self.fd.close()
@@ -96,7 +99,7 @@ class WeiboHot(object):  # 创建Circle类
             print(len(trs))
             for tr in trs:
                 num = tr.css('td.td-01.ranktop::text').get()
-                print(num)
+                #print(num)
                 if num:
                     if num.isdigit():
                         title = tr.css('.td-02 a::text').get()
@@ -154,6 +157,21 @@ def process_day(interval):
     except:
         print('convert_video_js failed.')
 
+    filename = 'file:///'+os.getcwd()+'/weibo/' + yes + '.video.html'
+    print(filename)
+    try:
+        html_to_video(filename, 600)
+    except:
+        print('html_to_video failed.')
+
+    time.sleep(300)
+    webm_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.webm'
+    mp4_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.mp4'
+    try:
+        webm_to_mp4(webm_path, mp4_path)
+    except:
+        print('webm_to_mp4 failed.')
+
     print(hot.day)
     print(hot.csv_file)
     print(hot.csv_writer)
@@ -171,7 +189,7 @@ if __name__ == "__main__":
 
     if opt.schedule_on == True:
         # 每天生成新的 csv 和 html
-        schedule.every().day.at("00:30").do(process_day, opt.interval)  # 每天的10:30执行一次任务
+        schedule.every().day.at("07:30").do(process_day, opt.interval)  # 每天的10:30执行一次任务
 
     while True:
         schedule.run_pending()
