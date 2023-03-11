@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 
-def new_charts(file_path):
+def new_charts(file_path, out_html_path):
     factor = 10
     #CurrentConfig.ONLINE_HOST = 'D:/python/pyecharts-assets-master/assets/'
     CurrentConfig.ONLINE_HOST = 'http://127.0.0.1:8000/assets/'
@@ -77,8 +77,8 @@ def new_charts(file_path):
             is_auto_play=True,          # 是否自动播放
         )
 
-    html_path = file_path + '.html'
-    t.render(html_path)
+    #html_path = file_path + '.html'
+    t.render(out_html_path)
 
 def train_options():
     parser = argparse.ArgumentParser()

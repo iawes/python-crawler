@@ -19,8 +19,8 @@ import argparse
 
 from weibo_dongtu import new_charts
 from weibo_video import convert_video_js
-from html_to_video_2 import html_to_video
-from webm_to_mp4 import webm_to_mp4
+#from html_to_video_2 import html_to_video
+#from webm_to_mp4 import webm_to_mp4
 from qq_email import qq_send_mail
 
 #def run():
@@ -37,8 +37,8 @@ from qq_email import qq_send_mail
 
 #os.environ["http_proxy"] = "http://135.251.33.16:80"
 #os.environ["https_proxy"] = "http://135.251.33.16:80"
-os.environ["http_proxy"] = "http://10.158.100.9:8080"
-os.environ["https_proxy"] = "http://10.158.100.9:8080"
+#os.environ["http_proxy"] = "http://10.158.100.9:8080"
+#os.environ["https_proxy"] = "http://10.158.100.9:8080"
 #os.environ["http_proxy"] = "http://135.252.244.221:3128"
 #os.environ["https_proxy"] = "http://135.252.244.221:3128"
 
@@ -138,7 +138,7 @@ class WeiboHot(object):  # 创建Circle类
             schedule.cancel_job(self.job)
             self.job = None
 
-        self.job = schedule.every(interval).minutes.until('22:00').do(self.get_content)
+        self.job = schedule.every(interval).minutes.until('23:55').do(self.get_content)
 
         #while True:
         #    schedule.run_pending()
@@ -149,14 +149,14 @@ def train_options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--interval", default=2, type=int, help='interval of timer')
     parser.add_argument("--schedule_on", default=False, type=bool, help='start timer')
-    parser.add_argument("--spy_only", default=True, type=bool, help='start timer')
+    parser.add_argument("--module_on", default=False, type=bool, help='module_on')
     parser.add_argument("--retuest_test", default=False, type=bool, help='retuest_test')
     #parser.add_argument("--max_features", default=6, type=int, help='maximum of features',)
     #parser.add_argument("--max_depth", default=5, type=int,help='maximum depth')
     opt = parser.parse_args()
     return opt
 
-def process_day(interval, spy_only):
+def process_day(interval, module_on):
     all_jobs = schedule.get_jobs()
     print(all_jobs)
 
@@ -166,41 +166,52 @@ def process_day(interval, spy_only):
     all_jobs = schedule.get_jobs()
     print(all_jobs)
 
-    if spy_only == False:
+    yes = (datetime.datetime.now() + datetime.timedelta(days = -1)).strftime('%Y-%m-%d')
+    print(yes)
 
-        yes = (datetime.datetime.now() + datetime.timedelta(days = -1)).strftime('%Y-%m-%d')
-        print(yes)
-        yes_csv = './weibo/' + yes + '.csv'
+    weibo_path = os.getcwd()+'/weibo/'
+    yes_csv = weibo_path + yes + '.csv'
+    yes_echart_html = weibo_path + yes + '.csv.html'
+    yes_video_html = weibo_path + yes + '.video.html'
+
+    if (os.path.exists(yes_csv)):
         try:
-            new_charts(yes_csv)
+            new_charts(yes_csv, yes_echart_html)
         except:
             print('new_charts failed.')
 
         try:
-            convert_video_js(yes_csv + '.html', r'C:\usr\code\pytdx\convert_video_template.html', 15, 4, 30, 31)
+            convert_video_js(yes_echart_html, r'C:\usr\code\pytdx\convert_video_template.html', 15, 4, 30, 31, yes_video_html)
         except:
             print('convert_video_js failed.')
 
-        filename = 'file:///'+os.getcwd()+'/weibo/' + yes + '.video.html'
-        print(filename)
         try:
-            html_to_video(filename, 600)
-        except:
-            print('html_to_video failed.')
-
-        time.sleep(300)
-        webm_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.webm'
-        mp4_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.mp4'
-        try:
-            webm_to_mp4(webm_path, mp4_path)
-        except:
-            print('webm_to_mp4 failed.')
-
-        time.sleep(300)
-        try:
-            qq_send_mail(yes, mp4_path)
+            qq_send_mail(yes, yes_video_html)
         except:
             print('qq_send_mail failed.')
+
+#        if module_on == True:
+#
+#            filename = 'file:///' + yes_video_html
+#            print(filename)
+#            try:
+#                html_to_video(filename, 600)
+#            except:
+#                print('html_to_video failed.')
+#
+#            time.sleep(300)
+#            webm_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.webm'
+#            mp4_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.mp4'
+#            try:
+#                webm_to_mp4(webm_path, mp4_path)
+#            except:
+#                print('webm_to_mp4 failed.')
+#
+#            time.sleep(300)
+#            try:
+#                qq_send_mail(yes, mp4_path)
+#            except:
+#                print('qq_send_mail failed.')
 
     print(hot.day)
     print(hot.csv_file)
@@ -218,7 +229,7 @@ if __name__ == "__main__":
         exit()
 
     # 开始执行任务先
-    process_day(opt.interval, opt.spy_only)
+    process_day(opt.interval, opt.module_on)
 
     if opt.schedule_on == True:
         # 每天生成新的 csv 和 html
@@ -226,3 +237,4 @@ if __name__ == "__main__":
 
     while True:
         schedule.run_pending()
+        time.sleep(60)

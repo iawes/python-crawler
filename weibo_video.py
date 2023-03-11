@@ -11,7 +11,7 @@ def delete_lines(filename, head,tail):
     print(b)
     return b
 
-def convert_video_js(file1, file2, h1, t1, h2, t2):
+def convert_video_js(file1, file2, h1, t1, h2, t2, video_file):
     fd1 = open(file1, 'r', encoding='utf-8')
     str1 = fd1.readlines()
     str_body  = ''.join(str1[h1:-t1])
@@ -44,10 +44,10 @@ def convert_video_js(file1, file2, h1, t1, h2, t2):
     str_all = str_head + str_body + str_tail
     #print(str_all)
 
-    file_output = file1.replace("csv", "video")
-    print(file_output)
+    #file_output = file1.replace("csv", "video")
+    #print(video_file)
 
-    fout = open(file_output, 'w')
+    fout = open(video_file, 'w')
     fout.write(str_all)
     fout.close()
 
@@ -64,6 +64,7 @@ def train_options():
     parser.add_argument("--tail_line_src", default=4, type=int, help='rm tail lines of csv html')
     parser.add_argument("--head_line_temp", default=30, type=int, help='add head lines of video html')
     parser.add_argument("--tail_line_temp", default=31, type=int, help='add tail lines of video html')
+    parser.add_argument("--video_file", default=r'./weibo/2023-02-26.video.html', type=str, help='output video html file path')
     opt = parser.parse_args()
     return opt
 
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     print(opt)
 
     try:
-        convert_video_js(opt.file_src, opt.file_template, opt.head_line_src, opt.tail_line_src, opt.head_line_temp, opt.tail_line_temp)
+        convert_video_js(opt.file_src, opt.file_template, opt.head_line_src, opt.tail_line_src, opt.head_line_temp, opt.tail_line_temp, opt.video_file)
     except Exception as e:
         except_type, except_value, except_traceback = sys.exc_info()
         except_file = os.path.split(except_traceback.tb_frame.f_code.co_filename)[1]
