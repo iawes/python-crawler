@@ -9,8 +9,8 @@ import os
 
 #'proxy_port' should be an integer
 #'PROXY_TYPE_SOCKS4' can be replaced to HTTP or PROXY_TYPE_SOCKS5
-socks.setdefaultproxy(socks.PROXY_TYPE_HTTP, "10.158.100.9", 8080)
-socks.wrapmodule(smtplib)
+#socks.setdefaultproxy(socks.PROXY_TYPE_HTTP, "10.158.100.9", 8080)
+#socks.wrapmodule(smtplib)
 
 #os.environ["http_proxy"] = "http://10.158.100.9:8080"
 #os.environ["https_proxy"] = "http://10.158.100.9:8080"
