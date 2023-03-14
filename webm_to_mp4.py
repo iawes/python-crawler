@@ -1,5 +1,6 @@
 import subprocess
 import ffmpeg
+import argparse
 
 class FFMConvertor:
 
@@ -22,6 +23,17 @@ def webm_to_mp4(input_file, output_file):
     #ffm.convert_webm_mp4_subprocess(r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\2023-03-03.webm', r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\2023-03-03-1.mp4')
     ffm.convert_webm_mp4_subprocess(input_file, output_file)
 
+def train_options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--day", default='2023-03-03', type=str, help='csv file of the day')
+    opt = parser.parse_args()
+    return opt
+
 if __name__ == "__main__":
-    webm_to_mp4(r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\2023-03-03.webm', r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\2023-03-03.mp4')
+    opt = train_options()
+
+    file_path = "C:\\N-20S1PF344DFM-Data\\yaweili\\Downloads\\"
+    webm_file = file_path + opt.day + '.webm'
+    mp4_file = file_path + opt.day + '.mp4'
+    webm_to_mp4(webm_file, mp4_file)
 # ffm.convert_webm_mp4_module(r*.webm', r'*.mp4')
