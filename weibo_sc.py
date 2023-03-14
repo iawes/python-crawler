@@ -67,6 +67,7 @@ class WeiboHot(object):  # 创建Circle类
         self.day = '1970-1-1'  # 表示给我们将要创建的实例赋予属性r赋值
         self.csv_file = './weibo/' + self.day + '.csv'
         self.job = None
+        self.exist = False
         print('init done.')
 
     def __del__(self):
@@ -86,10 +87,7 @@ class WeiboHot(object):  # 创建Circle类
 
     def new_csv(self):
         # 判断文件是否存在
-        if (os.path.exists(self.csv_file)) :
-            #存在，则删除文件
-            #os.remove(self.csv_file)
-            print('%s exist.' %(self.csv_file))
+        self.exist = os.path.exists(self.csv_file)
 
         if self.fd != -1:
             self.fd.close()
@@ -102,35 +100,37 @@ class WeiboHot(object):  # 创建Circle类
             '标题',
             '热度',
         ])
-        self.csv_writer.writeheader()
+        
+        if (False == self.exist) :
+            self.csv_writer.writeheader()
 
     def get_content(self):
         now_time = int(time.time())
         timeArray = time.localtime(now_time)
         date = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
-#    try:
-        trs = get_trs()
-        #print(len(trs))
-        for tr in trs:
-            num = tr.css('td.td-01.ranktop::text').get()
-            #print(num)
-            if num:
-                if num.isdigit():
-                    title = tr.css('.td-02 a::text').get()
-                    hot2 = tr.css('.td-02 span::text').get()
-                    hot = re.sub('([^\u0030-\u0039])', '', hot2)
-                    dit = {
-                        '时间': date,
-                        '排名': num,
-                        '标题': title,
-                        '热度': hot,
-                    }
-                    print(dit)
-                    self.csv_writer.writerow(dit)
-                else:
-                    print("not digit num.")
-#    except:
-#        print('get_trs failed.')
+        try:
+            trs = get_trs()
+            #print(len(trs))
+            for tr in trs:
+                num = tr.css('td.td-01.ranktop::text').get()
+                #print(num)
+                if num:
+                    if num.isdigit():
+                        title = tr.css('.td-02 a::text').get()
+                        hot2 = tr.css('.td-02 span::text').get()
+                        hot = re.sub('([^\u0030-\u0039])', '', hot2)
+                        dit = {
+                            '时间': date,
+                            '排名': num,
+                            '标题': title,
+                            '热度': hot,
+                        }
+                        print(dit)
+                        self.csv_writer.writerow(dit)
+                    else:
+                        print("not digit num.")
+        except:
+            print('get_trs failed.')
 
     def process_day(self, interval):
 
