@@ -58,13 +58,13 @@ def convert_video_js(file1, file2, h1, t1, h2, t2, video_file):
 
 def train_options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--file_src", default=r'./weibo/2023-02-26.csv.html', type=str, help='pycharts html file path')
-    parser.add_argument("--file_template", default=r'C:\usr\code\pytdx\convert_video_template.html', type=str, help='video conert template html file path')
+    parser.add_argument("--file_src", default=r'./weibo/2023-03-11.csv.html', type=str, help='pycharts html file path')
+    parser.add_argument("--file_template", default=os.getcwd()+'/convert_video_template.html', type=str, help='video conert template html file path')
     parser.add_argument("--head_line_src", default=15, type=int, help='rm head lines of csv html')
     parser.add_argument("--tail_line_src", default=4, type=int, help='rm tail lines of csv html')
     parser.add_argument("--head_line_temp", default=30, type=int, help='add head lines of video html')
     parser.add_argument("--tail_line_temp", default=31, type=int, help='add tail lines of video html')
-    parser.add_argument("--video_file", default=r'./weibo/2023-02-26.video.html', type=str, help='output video html file path')
+    parser.add_argument("--video_file", default=r'./weibo/2023-03-11.video.html', type=str, help='output video html file path')
     opt = parser.parse_args()
     return opt
 

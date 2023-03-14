@@ -50,7 +50,7 @@ def get_trs():
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
         'Connection':'close',
-        #'Cookie': 'SINAGLOBAL=1841149334224.8252.1642397316953; SUB=_2AkMVODNxf8NxqwFRmP4dxWjkb4xxzw3EieKjZMKqJRMxHRl-yT9jqhJctRB6PrgdnsJWNs-mEM0FvrXkkj_GbQ92SyMy; SUBP=0033WrSXqPxfM72-Ws9jqgMF55529P9D9WhUHi5ZivCRoPRwfx_.UyF6; ULV=1676516741382:1:1:1:1841149334224.8252.1642397316953:; UOR=,,www.baidu.com; login_sid_t=21ee6d671cc1f4245087df89ce7770b5; cross_origin_proto=SSL; _s_tentry=passport.weibo.com; Apache=1841149334224.8252.1642397316953'
+        'Cookie': 'SINAGLOBAL=1841149334224.8252.1642397316953; SUB=_2AkMVODNxf8NxqwFRmP4dxWjkb4xxzw3EieKjZMKqJRMxHRl-yT9jqhJctRB6PrgdnsJWNs-mEM0FvrXkkj_GbQ92SyMy; SUBP=0033WrSXqPxfM72-Ws9jqgMF55529P9D9WhUHi5ZivCRoPRwfx_.UyF6; ULV=1676516741382:1:1:1:1841149334224.8252.1642397316953:; UOR=,,www.baidu.com; login_sid_t=21ee6d671cc1f4245087df89ce7770b5; cross_origin_proto=SSL; _s_tentry=passport.weibo.com; Apache=1841149334224.8252.1642397316953'
     }
     #response = requests.get(url=url, headers=headers, proxies=proxies)
     response = requests.get(url=url, headers=headers)
@@ -147,7 +147,7 @@ hot = WeiboHot()
 
 def train_options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--interval", default=2, type=int, help='interval of timer')
+    parser.add_argument("--interval", default=4, type=int, help='interval of timer')
     parser.add_argument("--schedule_on", default=False, type=bool, help='start timer')
     parser.add_argument("--module_on", default=False, type=bool, help='module_on')
     parser.add_argument("--retuest_test", default=False, type=bool, help='retuest_test')
@@ -180,8 +180,9 @@ def process_day(interval, module_on):
         except:
             print('new_charts failed.')
 
+        video_temp = os.getcwd()+'/convert_video_template.html'
         try:
-            convert_video_js(yes_echart_html, r'C:\usr\code\pytdx\convert_video_template.html', 15, 4, 30, 31, yes_video_html)
+            convert_video_js(yes_echart_html, video_temp, 15, 4, 30, 31, yes_video_html)
         except:
             print('convert_video_js failed.')
 
