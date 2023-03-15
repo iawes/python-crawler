@@ -2,13 +2,17 @@ import os
 import re
 import argparse
 
+from module_logger import get_logme
+
+logger = get_logme()
+
 def delete_lines(filename, head,tail):
     fin = open(filename, 'r')
     a = fin.readlines()
     fout = open(filename, 'w')
     b = ''.join(a[head:-tail])
     #fout.write(b)
-    print(b)
+    #print(b)
     return b
 
 def convert_video_js(file1, file2, h1, t1, h2, t2, video_file):
@@ -37,7 +41,7 @@ def convert_video_js(file1, file2, h1, t1, h2, t2, video_file):
 
     #含有路径的名字无法打开
     file_name = os.path.basename(file1).strip('.csv.html')
-    print(file_name)
+    #print(file_name)
     str_tail = re.sub(r"\btest_xxx\b", file_name, str_tail)
     #print(str_tail)
 
@@ -70,17 +74,19 @@ def train_options():
 
 if __name__ == "__main__":
     opt = train_options()
-    print(opt)
+    logger.debug(opt)
 
     try:
         convert_video_js(opt.file_src, opt.file_template, opt.head_line_src, opt.tail_line_src, opt.head_line_temp, opt.tail_line_temp, opt.video_file)
-    except Exception as e:
-        except_type, except_value, except_traceback = sys.exc_info()
-        except_file = os.path.split(except_traceback.tb_frame.f_code.co_filename)[1]
-        exc_dict = {
-            "报错类型": except_type,
-            "报错信息": except_value,
-            "报错文件": except_file,
-            "报错行数": except_traceback.tb_lineno,
-        }
-        print(exc_dict)
+    except:
+        logger.exception('convert_video_js failed.')
+#    except Exception as e:
+#        except_type, except_value, except_traceback = sys.exc_info()
+#        except_file = os.path.split(except_traceback.tb_frame.f_code.co_filename)[1]
+#        exc_dict = {
+#            "报错类型": except_type,
+#            "报错信息": except_value,
+#            "报错文件": except_file,
+#            "报错行数": except_traceback.tb_lineno,
+#        }
+#        print(exc_dict)

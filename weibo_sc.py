@@ -9,7 +9,8 @@ import re
 import schedule
 
 import argparse
-
+#from loguru import logger
+from module_logger import get_logme,add_logme
 
 #import socks
 #'proxy_port' should be an integer
@@ -22,6 +23,9 @@ from weibo_video import convert_video_js
 #from html_to_video_2 import html_to_video
 #from webm_to_mp4 import webm_to_mp4
 from qq_email import qq_send_mail
+
+#logger = MyLogger('.//weibo//').get_logger()
+logger = add_logme('.//weibo//')
 
 #def run():
 #    print("I'm doing something...")
@@ -44,6 +48,9 @@ from qq_email import qq_send_mail
 
 #proxies = { "http": "http://10.158.100.9:8080", "https": "http://10.158.100.9:8080", }
 #proxies = { "http": "http://135.251.33.16:80", "https": "http://135.251.33.16:80", }
+
+#log
+#logger.add("scawler.log", , rotation="7:35")
 
 def get_trs():
     url = 'https://s.weibo.com/top/summary?cate=realtimehot'
@@ -68,19 +75,19 @@ class WeiboHot(object):  # 创建Circle类
         self.csv_file = './weibo/' + self.day + '.csv'
         self.job = None
         self.exist = False
-        print('init done.')
+        logger.info('init done.')
 
     def __del__(self):
         #schedule.clear(self.schedule_tag)
         if self.fd != -1:
             self.fd.close()
-        print('clear done.')
+        logger.info('clear done.')
 
     def new_day(self, interval):
         self.day = datetime.date.today().strftime("%Y-%m-%d")
-        print('new day %s' %(self.day))
+        logger.info('new day %s' %(self.day))
         self.csv_file = './weibo/' + self.day + '.csv'
-        print('new file %s' %(self.csv_file))
+        logger.debug('new file %s' %(self.csv_file))
 
         self.new_csv()
         self.process_day(interval)
@@ -100,7 +107,7 @@ class WeiboHot(object):  # 创建Circle类
             '标题',
             '热度',
         ])
-        
+
         if (False == self.exist) :
             self.csv_writer.writeheader()
 
@@ -125,12 +132,12 @@ class WeiboHot(object):  # 创建Circle类
                             '标题': title,
                             '热度': hot,
                         }
-                        print(dit)
+                        #print(dit)
                         self.csv_writer.writerow(dit)
                     else:
-                        print("not digit num.")
+                        logger.warning("not digit num.")
         except:
-            print('get_trs failed.')
+            logger.exception('get_trs failed.')
 
     def process_day(self, interval):
 
@@ -156,18 +163,18 @@ def train_options():
     opt = parser.parse_args()
     return opt
 
-def process_day(interval, module_on):
+def schedule_day(interval, module_on):
     all_jobs = schedule.get_jobs()
-    print(all_jobs)
+    logger.debug(all_jobs)
 
-    print('new day content')
+    logger.info('new day content')
     hot.new_day(interval)
 
     all_jobs = schedule.get_jobs()
-    print(all_jobs)
+    logger.info(all_jobs)
 
     yes = (datetime.datetime.now() + datetime.timedelta(days = -1)).strftime('%Y-%m-%d')
-    print(yes)
+    logger.info(yes)
 
     weibo_path = os.getcwd()+'/weibo/'
     yes_csv = weibo_path + yes + '.csv'
@@ -178,18 +185,18 @@ def process_day(interval, module_on):
         try:
             new_charts(yes_csv, yes_echart_html)
         except:
-            print('new_charts failed.')
+            logger.exception('new_charts failed.')
 
         video_temp = os.getcwd()+'/convert_video_template.html'
         try:
             convert_video_js(yes_echart_html, video_temp, 15, 4, 30, 31, yes_video_html)
         except:
-            print('convert_video_js failed.')
+            logger.exception('convert_video_js failed.')
 
         try:
             qq_send_mail(yes, yes_video_html)
         except:
-            print('qq_send_mail failed.')
+            logger.exception('qq_send_mail failed.')
 
 #        if module_on == True:
 #
@@ -214,27 +221,21 @@ def process_day(interval, module_on):
 #            except:
 #                print('qq_send_mail failed.')
 
-    print(hot.day)
-    print(hot.csv_file)
-    print(hot.csv_writer)
-    print(hot.fd)
-    print(hot.job)
-
 if __name__ == "__main__":
 
     opt = train_options()
-    print(opt)
+    logger.debug(opt)
 
     if opt.retuest_test == True:
         get_trs()
         exit()
 
     # 开始执行任务先
-    process_day(opt.interval, opt.module_on)
+    schedule_day(opt.interval, opt.module_on)
 
     if opt.schedule_on == True:
         # 每天生成新的 csv 和 html
-        schedule.every().day.at("07:30").do(process_day, opt.interval)  # 每天的10:30执行一次任务
+        schedule.every().day.at("07:30").do(schedule_day, opt.interval)  # 每天的10:30执行一次任务
 
     while True:
         schedule.run_pending()

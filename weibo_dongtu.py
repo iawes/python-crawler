@@ -5,6 +5,9 @@ from pyecharts.globals import ThemeType, CurrentConfig
 import argparse
 import os
 import sys
+from module_logger import get_logme
+
+logger = get_logme()
 
 def new_charts(file_path, out_html_path):
     factor = 10
@@ -24,7 +27,7 @@ def new_charts(file_path, out_html_path):
     #print(df1.loc[df1['排名'].isin(range(11))])
     df = df1.loc[df1['排名'].isin(range(11))]
     n = list(df['排名']).count(1)
-    print(n)
+    logger.info(n)
 
     for i in range(n):
         #print(i)
@@ -92,13 +95,15 @@ if __name__ == "__main__":
 
     try:
         new_charts(opt.file)
-    except Exception as e:
-        except_type, except_value, except_traceback = sys.exc_info()
-        except_file = os.path.split(except_traceback.tb_frame.f_code.co_filename)[1]
-        exc_dict = {
-            "报错类型": except_type,
-            "报错信息": except_value,
-            "报错文件": except_file,
-            "报错行数": except_traceback.tb_lineno,
-        }
-        print(exc_dict)
+    except:
+        logger.exception('new_charts failed.')
+#    except Exception as e:
+#        except_type, except_value, except_traceback = sys.exc_info()
+#        except_file = os.path.split(except_traceback.tb_frame.f_code.co_filename)[1]
+#        exc_dict = {
+#            "报错类型": except_type,
+#            "报错信息": except_value,
+#            "报错文件": except_file,
+#            "报错行数": except_traceback.tb_lineno,
+#        }
+#        print(exc_dict)

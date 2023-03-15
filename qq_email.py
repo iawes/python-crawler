@@ -6,6 +6,9 @@ from email.utils import formataddr
 from email.mime.application import MIMEApplication
 import socks
 import os
+from module_logger import get_logme
+
+logger = get_logme()
 
 #'proxy_port' should be an integer
 #'PROXY_TYPE_SOCKS4' can be replaced to HTTP or PROXY_TYPE_SOCKS5
@@ -56,12 +59,11 @@ def sendemail(sender, passwd, to_receiver: list, cc_receiver: list, title='邮�
         server = smtplib.SMTP_SSL("smtp.qq.com", 465)
         server.login(my_sender, my_pass)
         server.sendmail(my_sender, receiver, msg.as_string())
-        print("邮件发送成功")
+        logger.info("邮件发送成功")
         server.quit()
 
     except Exception as n:
-        print("Error: 无法发送邮件")
-        print(n)
+        logger.exception("Error: 无法发送邮件")
 
 def qq_send_mail(date, file):
     sender_main = '531832298@qq.com'
