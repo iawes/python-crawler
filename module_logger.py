@@ -47,7 +47,7 @@ def add_logme(file):
     return logme.get_logger()
 
 def ss():
-    my_logger = get_logme('.//weibo//')
+    my_logger = add_logme('.//weibo//')
 
     my_logger.info(2222222)
     my_logger.debug(2222222)

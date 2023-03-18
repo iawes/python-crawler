@@ -141,11 +141,12 @@ class WeiboHot(object):  # 创建Circle类
 
     def process_day(self, interval):
 
-        if self.job != None:
-            schedule.cancel_job(self.job)
-            self.job = None
+#        if self.job != None:
+#            schedule.cancel_job(self.job)
+#            self.job = None
 
-        self.job = schedule.every(interval).minutes.until('23:55').do(self.get_content)
+#        self.job = schedule.every(interval).minutes.do(self.get_content)
+         self.job = schedule.every(interval).minutes.until('22:55').do(self.get_content)
 
         #while True:
         #    schedule.run_pending()
@@ -165,9 +166,8 @@ def train_options():
 
 def schedule_day(interval, module_on):
     all_jobs = schedule.get_jobs()
-    logger.debug(all_jobs)
+    logger.info(all_jobs)
 
-    logger.info('new day content')
     hot.new_day(interval)
 
     all_jobs = schedule.get_jobs()
@@ -233,9 +233,12 @@ if __name__ == "__main__":
     # 开始执行任务先
     schedule_day(opt.interval, opt.module_on)
 
-    if opt.schedule_on == True:
-        # 每天生成新的 csv 和 html
-        schedule.every().day.at("07:30").do(schedule_day, opt.interval)  # 每天的10:30执行一次任务
+#    if opt.schedule_on == True:
+#        # 每天生成新的 csv 和 html
+#        schedule.every().day.at("07:30").do(schedule_day, opt.interval)  # 每天的10:30执行一次任务
+
+    all_jobs = schedule.get_jobs()
+    logger.info(all_jobs)
 
     while True:
         schedule.run_pending()
