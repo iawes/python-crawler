@@ -136,6 +136,7 @@ class WeiboHot(object):  # 创建Circle类
                         self.csv_writer.writerow(dit)
                     else:
                         logger.warning("not digit num.")
+            logger.info('get_trs sscuess %s.' %(now_time))
         except:
             logger.exception('get_trs failed.')
 
@@ -231,7 +232,10 @@ if __name__ == "__main__":
         exit()
 
     # 开始执行任务先
-    schedule_day(opt.interval, opt.module_on)
+    try:
+        schedule_day(opt.interval, opt.module_on)
+    except:
+        logger.exception('main failed.')
 
 #    if opt.schedule_on == True:
 #        # 每天生成新的 csv 和 html
