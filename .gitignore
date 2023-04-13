@@ -1,5 +1,9 @@
 weibo/*.html
 weibo/*.log
+weibo/*.mp4
+weibo/*.webm
+./*.mp4
+./*.webm
 log/
 __pycache__/
 

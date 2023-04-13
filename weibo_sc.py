@@ -20,7 +20,7 @@ from module_logger import get_logme,add_logme
 
 from weibo_dongtu import new_charts
 from weibo_video import convert_video_js
-#from html_to_video_2 import html_to_video
+from html_to_video import html_to_video
 #from webm_to_mp4 import webm_to_mp4
 from qq_email import qq_send_mail
 
@@ -199,14 +199,14 @@ def schedule_day(interval, module_on):
         except:
             logger.exception('qq_send_mail failed.')
 
-#        if module_on == True:
-#
-#            filename = 'file:///' + yes_video_html
-#            print(filename)
-#            try:
-#                html_to_video(filename, 600)
-#            except:
-#                print('html_to_video failed.')
+        if module_on == True:
+
+            filename = 'file:///' + yes_video_html
+            logger.info(filename)
+            try:
+                html_to_video(filename, 300)
+            except:
+                logger.exception('html_to_video failed.')
 #
 #            time.sleep(300)
 #            webm_path = r'C:\N-20S1PF344DFM-Data\yaweili\Downloads\\' + yes + '.webm'
